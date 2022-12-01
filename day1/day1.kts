@@ -4,7 +4,7 @@ brew install kotlin
 brew install kscript
 first system argument can be supplied that is a filepath string leading to a file containing the data required to solve the problem
 to run the application run
-kscript day1.kts <optional filepath parameter | default is a file called input in the same directory as this file>
+kscript day1.kts <optional filepath parameter | default is a file called test in the same directory as this file>
 or
 ./day1.kts*/
 
