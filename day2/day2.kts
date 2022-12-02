@@ -9,100 +9,130 @@ or
 ./day1.kts*/
 
 import java.io.File
-//xyz me
-//abc opponent
-// a rock x
-//b paper y
-//c  scissors z
-//0 if you lost, 3 if the round was a draw, and 6 if you won
 
+val ROCK_SCORE = 1
+val PAPER_SCORE = 2
+val SCISSORS_SCORE = 3
+
+val LOSE_SCORE = 0
+val DRAW_SCORE = 3
+val WIN_SCORE = 6
+
+enum class Play(val play: String) {
+    ROCK("A"),
+    PAPER("B"),
+    SCRISSORS("C");
+
+    companion object {
+        fun create(play: String): Play {
+            return when (play) {
+                "A" -> ROCK
+                "B" -> PAPER
+                "C" -> SCRISSORS
+                else -> throw IllegalStateException()
+            }
+        }
+    }
+}
+
+enum class Result(val result: String) {
+    LOSE("X"),
+    DRAW("Y"),
+    WIN("Z");
+
+    companion object {
+        fun create(result: String): Result {
+            return when (result) {
+                "X" -> LOSE
+                "Y" -> DRAW
+                "Z" -> WIN
+                else -> throw IllegalStateException()
+            }
+        }
+    }
+}
 
 val filepath = if (args.isEmpty()) "test" else args[0]
-val caloriesPerElf = retrieveSortedArrayOfCaloriesPerElf(filepath)
+val games = File(filepath).readLines()
 
-println("Answer to task1: ${retrieveTask1Answer(caloriesPerElf)}")
-println("Answer to task2: ${retrieveTask2Answer(strategyGuide(filepath))}")
+println("Answer to task1: ${calculateTheScoreOfTheMatchByPlay(games).sum()}")
+println("Answer to task2: ${calculateTheScoreOfTheMatchByResult(games).sum()}")
 
-fun retrieveTask1Answer(caloriesPerElf: List<Int>): Int {
-    // Retrieve first item in sorted array of calories per elf
-    return caloriesPerElf.sum()
-}
 
-fun retrieveTask2Answer(caloriesPerElf: List<Int>): Int {
-    // Retrieve first item in sorted array of calories per elf
-    return caloriesPerElf.sum()
-}
-
-fun retrieveSortedArrayOfCaloriesPerElf(filepath: String): List<Int> {
-    val file = File(filepath).readLines().map { line -> line.replace("X", "A").replace("Y", "B").replace("Z", "C") }
-    val games = ArrayList<Int>()
-    file.forEach() {
-        game -> games.add(getScoreFromArray(game))
+fun calculateTheScoreOfTheMatchByPlay(games: List<String>): List<Int> {
+   return games.map {
+        game -> scoreCalculator(game.split(" ")
+                                    .reduce { opponent, you -> getGameByPlay(opponent, you) })
     }
-
-
-    return games
 }
 
-fun strategyGuide(filepath: String): List<Int> {
-    val file = File(filepath).readLines()
-//        .map { line -> line
-//        .replace("X", "A").replace("Y", "B").replace("Z", "C") }
-    val games = ArrayList<Int>()
-    file.forEach() {
-            game -> games.add(getScoreFromArray(game))
+fun calculateTheScoreOfTheMatchByResult(games: List<String>): List<Int> {
+    return games.map {
+            game -> scoreCalculator(game.split(" ")
+        .reduce { opponent, you -> getGameByResult(opponent, you) })
     }
-
-
-    return games
-}
-//x lose Y draw z win
-fun getCorrectPlayOnScenario(play: String, theirPlay: String): String {
-    if (play == "X")
-        return playLose(theirPlay)
-    if (play == "Z")
-        return playWinnable(theirPlay)
-    if (play == "Y")
-        return theirPlay
-    return play
-}
-//9177
-fun playWinnable(play: String): String {
-    if (play == "A")
-        return "B"
-    if (play == "B" )
-        return "C"
-//    if (play == "C")
-    return "A"
 }
 
-fun playLose(play: String): String {
-    if (play == "A")
-        return "C"
-    if (play == "B" )
-        return "A"
-//    if (play == "C")
-    return "B"
+fun getGameByPlay(opponent: String, you: String): String {
+    return "${opponent} ${toPlayConverter(you)}"
 }
 
-fun getScoreFromArray(game: String): Int {
-    val split = game.split(" ")
-    val correctPlay = getCorrectPlayOnScenario(split[1], split[0])
-    if (split[0] == correctPlay)
-        return 3 + shapePlayed(correctPlay)
-    if (split[0] == "A" && correctPlay == "B")
-        return 6+2
-    if (split[0] == "B" && correctPlay == "C")
-        return 6+3
-    if (split[0] == "C" && correctPlay == "A")
-        return 6+1
-    return 0 + shapePlayed(correctPlay)
+fun getGameByResult(opponent: String, you: String): String {
+    return "${opponent} ${getCorrectPlayOnScenario(opponent, you)}"
 }
 
-fun shapePlayed(shape: String): Int {
-    if (shape == "A")
-        return 1
-    if (shape == "B")
-        return 2
-    return 3
+fun toPlayConverter(play: String): String {
+    return when(play) {
+        "X" -> Play.ROCK.play
+        "Y" -> Play.PAPER.play
+        "Z" -> Play.SCRISSORS.play
+        else -> play
+    }
+}
+
+fun scoreCalculator(game: String): Int {
+    return when(game) {
+        "A A" -> ROCK_SCORE + DRAW_SCORE
+        "A B" -> PAPER_SCORE + WIN_SCORE
+        "A C" -> SCISSORS_SCORE + LOSE_SCORE
+        "B A" -> ROCK_SCORE + LOSE_SCORE
+        "B B" -> PAPER_SCORE + DRAW_SCORE
+        "B C" -> SCISSORS_SCORE + WIN_SCORE
+        "C A" -> ROCK_SCORE + WIN_SCORE
+        "C B" -> PAPER_SCORE + LOSE_SCORE
+        "C C" -> SCISSORS_SCORE + DRAW_SCORE
+        else -> throw IllegalStateException()
+    }
+}
+
+fun getScoreBasedOnPlay(play: String): Int {
+    return when(Play.create(play)) {
+        Play.ROCK -> ROCK_SCORE
+        Play.PAPER -> PAPER_SCORE
+        Play.SCRISSORS -> SCISSORS_SCORE
+    }
+}
+
+fun getCorrectPlayOnScenario(opponentPlay: String, yourResult: String): String {
+    return when(Result.create(yourResult)) {
+        Result.LOSE -> playToLose(opponentPlay)
+        Result.DRAW -> opponentPlay
+        Result.WIN -> playToWin(opponentPlay)
+    }
+}
+
+fun playToWin(play: String): String {
+    return when(Play.create(play)) {
+        Play.ROCK -> Play.PAPER.play
+        Play.PAPER -> Play.SCRISSORS.play
+        Play.SCRISSORS -> Play.ROCK.play
+    }
+}
+
+fun playToLose(play: String): String {
+    return when (Play.create(play)) {
+        Play.ROCK -> Play.SCRISSORS.play
+        Play.PAPER  -> Play.ROCK.play
+        Play.SCRISSORS -> Play.PAPER.play
+    }
 }
