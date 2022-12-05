@@ -6,6 +6,8 @@ import kotlin.reflect.typeOf
 val filepath = if (args.isEmpty()) "test" else args[0]
 val rucksacks = File(filepath).readLines()
 //A = 65 - 38 ~ a = 97 - 96 to score
+val UPPERCASE_SCORE_SUBTRACT = 96
+val LOWERCASE_SCORE_SUBTRACT = 38
 println("Answer for task1: ${retrieveAnswerForTask1(rucksacks).sum()}")
 println("Answer for task2: ${retrieveAnswerForTask2(rucksacks).sum()}")
 
@@ -17,30 +19,16 @@ fun retrieveAnswerForTask1(rucksacks: List<String>): List<Int> {
 
 fun retrieveAnswerForTask2(rucksacks: List<String>): List<Int> {
     return rucksacks.chunked(3).map { rucksacks ->
-        calculateScore(
-            findCommonBadge(
-                rucksacks
-            )
-        )
+        calculateScore(findCommonBadge(rucksacks))
     }
 }
 
 fun calculateScore(commonItem: Char): Int {
-//    println(commonItem)
-//    println(commonItem.code)
     if (commonItem.isUpperCase()) {
-//        println(commonItem.code - 26)
-        return commonItem.code - 38
+        return commonItem.code - LOWERCASE_SCORE_SUBTRACT
     }
-    else {
-//        println(commonItem.code - 26)
-        return commonItem.code - 96
-    }
+    return commonItem.code - UPPERCASE_SCORE_SUBTRACT
 }
-
-//fun findCommonBadge(compartments: List<String>): Char {
-//
-//}
 
 fun findCommonItem(compartments: List<String>): Char {
     return compartments.reduce { compartment1, compartment2 -> getCharacter(compartment1, compartment2) }.first()

@@ -20,9 +20,7 @@ fun retrieveAnswerForTask2(pairOfElves: List<String>): List<Int> {
 fun matchWholeSections(sections: List<String>): Int {
     val elf1Sections = convertRangeToListOfSections(sections[0].split("-"))
     val elf2Sections = convertRangeToListOfSections(sections[1].split("-"))
-    if (elf1Sections.containsAll(elf2Sections))
-        return 1
-    if (elf2Sections.containsAll(elf1Sections))
+    if (elf1Sections.containsAll(elf2Sections) || elf2Sections.containsAll(elf1Sections))
         return 1
     return 0
 }
