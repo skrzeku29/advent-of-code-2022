@@ -39,11 +39,11 @@ fun retrieveAnswerForTask1(cargo: List<String>): List<String> {
         val times = chunks[1].toInt()
         for (i in 0..times-1) {
 //            println(chunks)
-            println(stacks.get(chunks[5].toInt()-1))
-            println(chunks[3].toInt()-1)
-            println(stacks.get(chunks[3].toInt()-1).first())
-            stacks.get(chunks[5].toInt()-1).add(0, stacks.get(chunks[3].toInt()-1).first())
-            stacks.get(chunks[3].toInt()-1).removeFirst()
+//            println(stacks.get(chunks[5].toInt()-1))
+//            println(chunks[3].toInt()-1)
+//            println(stacks.get(chunks[3].toInt()-1).first())
+            stacks.get(chunks[5].toInt()-1).add(0, stacks.get(chunks[3].toInt()-1)[times-1-i])
+            stacks.get(chunks[3].toInt()-1).removeAt(times-1-i)
         }
         println(stacks)
     }
