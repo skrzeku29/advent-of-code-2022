@@ -53,15 +53,17 @@ println("Answer to task2: ${calculateTheScoreOfTheMatchByResult(games).sum()}")
 
 fun calculateTheScoreOfTheMatchByPlay(games: List<String>): List<Int> {
    return games.map {
-        game -> scoreCalculator(game.split(" ")
-                                    .reduce { opponent, you -> getGameByPlay(opponent, you) })
+        game -> scoreCalculator(game
+                    .split(" ")
+                    .reduce { opponent, you -> getGameByPlay(opponent, you) })
     }
 }
 
 fun calculateTheScoreOfTheMatchByResult(games: List<String>): List<Int> {
     return games.map {
-            game -> scoreCalculator(game.split(" ")
-        .reduce { opponent, you -> getGameByResult(opponent, you) })
+            game -> scoreCalculator(game
+                        .split(" ")
+                        .reduce { opponent, you -> getGameByResult(opponent, you) })
     }
 }
 
