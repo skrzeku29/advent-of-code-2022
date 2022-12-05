@@ -13,8 +13,8 @@ val instructions = cargoAndInstructions.subList(indexOfCargoAndInstructionSplit 
 println("Answer for task1: ${retrieveAnswerForTask1(unsanitizedCargoInput, instructions)}")
 println("Answer for task2: ${retrieveAnswerForTask2(unsanitizedCargoInput, instructions)}")
 
-fun listOfMutableArrayCharactersToString(chars: List<String>): String {
-    return chars.joinToString().replace(", ", "")
+fun listOfMutableArrayCharactersToString(strings: List<String>): String {
+    return strings.joinToString().replace(", ", "")
 }
 
 fun retrieveAnswerForTask1(unsanitizedCargoInput: List<String>, instructions: List<String>): String {
