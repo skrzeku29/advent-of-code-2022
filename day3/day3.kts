@@ -1,7 +1,6 @@
 #!/usr/bin/env kscript
 
 import java.io.File
-import kotlin.reflect.typeOf
 
 val filepath = if (args.isEmpty()) "test" else args[0]
 val rucksacks = File(filepath).readLines()

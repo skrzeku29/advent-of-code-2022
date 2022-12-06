@@ -1,29 +1,27 @@
 #!/usr/bin/env kscript
 
 import java.io.File
-import kotlin.reflect.typeOf
 
 val filepath = if (args.isEmpty()) "test" else args[0]
 val signal = File(filepath).readText()
+val TASK1_LIMIT = 4
+val TASK2_LIMIT = 14
 
-println("Answer for task1: ${retrieveAnswerForTask1(signal)}")
-//println("Answer for task2: ${retrieveAnswerForTask2(unsanitizedCargoInput, instructions)}")
+println("Answer for task1: ${getUniqueCharacterMarkerByLimit(signal, TASK1_LIMIT)}")
+println("Answer for task2: ${getUniqueCharacterMarkerByLimit(signal, TASK2_LIMIT)}")
 
-fun retrieveAnswerForTask1(signal: String): Int {
+fun getUniqueCharacterMarkerByLimit(signal: String, uniqueCharacterMakerLimit: Int): Int {
     var marker = 1
-    var soFar = mutableListOf<String>()
+    var uniqueCharacters = mutableListOf<String>()
     for (character in signal) {
-//        print(soFar)
-//        print(character)
-        val str = character.toString()
-        if (soFar.contains(str)) {
-            val index = soFar.indexOf(str)
+        if (uniqueCharacters.contains(character.toString())) {
+            val index = uniqueCharacters.indexOf(character.toString())
             for (i in 0..index) {
-                soFar.removeAt(index-i)
+                uniqueCharacters.removeAt(index-i)
             }
         }
-        soFar.add(str)
-        if (soFar.size == 4) {
+        uniqueCharacters.add(character.toString())
+        if (uniqueCharacters.size == uniqueCharacterMakerLimit) {
             return marker
         }
         marker+=1
